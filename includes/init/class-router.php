@@ -56,8 +56,7 @@ class Router {
 	 */
 	private function set_default_routes() {
 		$this->routes = [
-			'/url1/url2'        => Second_Page_Handler::class,
-			'/first-sample-url' => First_Page_Handler::class,
+			'/TSB_Webhook'        => Second_Page_Handler::class,
 		];
 
 	}

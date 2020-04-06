@@ -248,4 +248,71 @@ class Utility {
 
 		return $remote_address;
 	}
+
+
+    /**
+     * Method save plugin option on admin page  in Utility Class
+     *
+     * this method return plugin options after save option
+     *
+     * @access  public
+     * @static
+     *
+     * @return  array of plugin options.
+     */
+    public static function update_plugin_options( array $setting_page_form_data) {
+        $return=null;
+        $setting_page_form_data=self::normalize_settings_page_form_data($setting_page_form_data);
+
+        if (isset($setting_page_form_data['api_token']) and $setting_page_form_data['api_token'] != ''
+            and isset($setting_page_form_data['bot_username']) and $setting_page_form_data['bot_username'] != ''
+            and isset($setting_page_form_data['request_type']) and $setting_page_form_data['request_type'] == 'webhook'
+        )
+        {
+            $return=self::set_bot_webhook($setting_page_form_data['api_token'],$setting_page_form_data['bot_username']);
+        }
+
+        update_option('TSB_settings',$setting_page_form_data,false);
+        return $return;
+    }
+
+    /**
+     * Method normalize $_POST var that send to update_plugin_options function
+     *
+     * this method return normalize setting page form data
+     *
+     * @access  protected
+     *
+     * @return  array of  normalize setting page form data
+     */
+
+    public static function normalize_settings_page_form_data(array $setting_page_form_data )
+    {
+        unset($setting_page_form_data['_wpnonce']);
+        unset($setting_page_form_data['_wp_http_referer']);
+        unset($setting_page_form_data['tsb_settings_submit']);
+        return $setting_page_form_data;
+    }
+
+    public static function set_bot_webhook(string $bot_token, string $bot_username)
+    {
+        $hook_url = home_url('TSB_Webhook');
+        try {
+            // Create Telegram API object
+            $telegram = new \Longman\TelegramBot\Telegram($bot_token, $bot_username);
+            // Set webhook
+            $result = $telegram->setWebhook($hook_url);
+            if ($result->isOk()) {
+               return array(
+                   'webhook-status' => true,
+                   'webhook-message' =>  $result->getDescription(),
+               );
+            }
+        } catch (\Longman\TelegramBot\Exception\TelegramException $e) {
+            return array(
+                'webhook-status' => false,
+                'webhook-message' => $e->getMessage(),
+            );
+        }
+    }
 }

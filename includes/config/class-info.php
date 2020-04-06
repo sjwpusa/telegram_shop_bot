@@ -87,7 +87,8 @@ class Info {
 		if ( ! get_option( 'TSB_settings' ) ) {
             $site_name=get_bloginfo( "name" );
 		    $options=array(
-		        'bot_token'=>'',
+		        'api_token'=>'',
+		        'bot_username'=>'',
 		        'request_type'=>'get_updates',
 		        'start_command'=>__('Wellcome to '.$site_name.' Bot ',PLUGIN_TEXT_DOMAIN),
 		        'proxy_status'=>'',
@@ -95,7 +96,8 @@ class Info {
             );
 			update_option(
 				'TSB_settings',
-                $options
+                $options,
+                false
 			);
 		}
 

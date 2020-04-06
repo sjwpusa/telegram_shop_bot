@@ -72,6 +72,15 @@ class TSB {
 		 */
 		define( 'TSB_DB_VERSION', 1 );
 
+
+
+        /**
+         * Include composer autoload
+         */
+        $composer_autoload_path = 'vendor/autoload.php';
+        require_once trailingslashit( plugin_dir_path( __FILE__ ) ) . $composer_autoload_path;
+
+
 		/*Define Autoloader class for plugin*/
 		$autoloader_path = 'includes/class-autoloader.php';
 		/**
@@ -79,11 +88,6 @@ class TSB {
 		 */
 		require_once trailingslashit( plugin_dir_path( __FILE__ ) ) . $autoloader_path;
 
-        /**
-         * Include composer autoload
-         */
-        $composer_autoload_path = 'vendor/autoload.php';
-        require_once trailingslashit( plugin_dir_path( __FILE__ ) ) . $composer_autoload_path;
 
 		/*Define required constant for plugin*/
 		Constant::define_constant();
