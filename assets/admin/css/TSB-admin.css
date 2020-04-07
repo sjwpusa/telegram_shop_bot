@@ -95,6 +95,11 @@
     color: #8a8a8a;
 }
 
+.tsb-txt-red
+{
+    color: red;
+}
+
 .wptp-wrap .nav-tab-active,
 .wptp-wrap .nav-tab-active:focus,
 .wptp-wrap .nav-tab-active:focus:active,

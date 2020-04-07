@@ -261,58 +261,72 @@ class Utility {
      * @return  array of plugin options.
      */
     public static function update_plugin_options( array $setting_page_form_data) {
-        $return=null;
-        $setting_page_form_data=self::normalize_settings_page_form_data($setting_page_form_data);
-
-        if (isset($setting_page_form_data['api_token']) and $setting_page_form_data['api_token'] != ''
-            and isset($setting_page_form_data['bot_username']) and $setting_page_form_data['bot_username'] != ''
-            and isset($setting_page_form_data['request_type']) and $setting_page_form_data['request_type'] == 'webhook'
-        )
+        $res=array();
+        if (isset($setting_page_form_data['api_token']) and $setting_page_form_data['api_token'] != '')
         {
-            $return=self::set_bot_webhook($setting_page_form_data['api_token'],$setting_page_form_data['bot_username']);
+            $setting_page_form_data=self::normalize_settings_page_form_data($setting_page_form_data);
+            $setting_page_form_data['bot_username']= self::Bot_Get_Me($setting_page_form_data['api_token']);
+            update_option('TSB_settings',$setting_page_form_data,false);
+            if ($setting_page_form_data['bot_username'] !='unauthorized')
+            {
+                if (isset($setting_page_form_data['request_type']) and $setting_page_form_data['request_type'] == 'webhook')
+                {
+                    $res['webhook']=self::set_bot_webhook($setting_page_form_data['api_token'],$setting_page_form_data['bot_username']);
+                }
+                else
+                {
+                    $res['get_updates']=self::delete_bot_webhook($setting_page_form_data['api_token']);
+                }
+            }
         }
-
-        update_option('TSB_settings',$setting_page_form_data,false);
-        return $return;
+        else
+        {
+            $setting_page_form_data=self::normalize_settings_page_form_data($setting_page_form_data);
+            update_option('TSB_settings',$setting_page_form_data,false);
+        }
+        return $res;
     }
 
-    /**
-     * Method normalize $_POST var that send to update_plugin_options function
-     *
-     * this method return normalize setting page form data
-     *
-     * @access  protected
-     *
-     * @return  array of  normalize setting page form data
-     */
-
+    public static function Bot_Get_Me($bot_token=null)
+    {
+        try {
+            $telegram = new \Telegram\Bot\Api($bot_token);
+            return  $telegram->getMe()->getUsername();
+        } catch (\Telegram\Bot\Exceptions\TelegramResponseException $e) {
+            return 'unauthorized';
+        }
+    }
+    public static function set_bot_webhook(string $bot_token)
+    {
+        $username=self::Bot_Get_Me($bot_token);
+        $hook_url = home_url('TSB_Webhook');
+        try {
+            // Create Telegram API object
+            $telegram = new \Longman\TelegramBot\Telegram($bot_token, ($username)?$username:'');
+            // Set webhook
+            $result = $telegram->setWebhook($hook_url);
+            if ($result->isOk()) {
+                return true;
+            }
+        } catch (\Longman\TelegramBot\Exception\TelegramException $e) {
+            return false;
+        }
+    }
+    public static function delete_bot_webhook(string $bot_token)
+    {
+        try {
+            $telegram = new \Telegram\Bot\Api($bot_token);
+            $response = $telegram->removeWebhook();
+            return true;
+        } catch (\Telegram\Bot\Exceptions\TelegramResponseException $e) {
+           return false;
+        }
+    }
     public static function normalize_settings_page_form_data(array $setting_page_form_data )
     {
         unset($setting_page_form_data['_wpnonce']);
         unset($setting_page_form_data['_wp_http_referer']);
         unset($setting_page_form_data['tsb_settings_submit']);
         return $setting_page_form_data;
-    }
-
-    public static function set_bot_webhook(string $bot_token, string $bot_username)
-    {
-        $hook_url = home_url('TSB_Webhook');
-        try {
-            // Create Telegram API object
-            $telegram = new \Longman\TelegramBot\Telegram($bot_token, $bot_username);
-            // Set webhook
-            $result = $telegram->setWebhook($hook_url);
-            if ($result->isOk()) {
-               return array(
-                   'webhook-status' => true,
-                   'webhook-message' =>  $result->getDescription(),
-               );
-            }
-        } catch (\Longman\TelegramBot\Exception\TelegramException $e) {
-            return array(
-                'webhook-status' => false,
-                'webhook-message' => $e->getMessage(),
-            );
-        }
     }
 }

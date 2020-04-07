@@ -14,7 +14,7 @@
 
 namespace Plugin_Name_Dir\Includes\Init;
 
-use Plugin_Name_Dir\Includes\PageHandlers\Second_Page_Handler;
+use Plugin_Name_Dir\Includes\PageHandlers\TSB_Webhook_Handler;
 use Plugin_Name_Dir\Includes\PageHandlers\First_Page_Handler;
 
 /**
@@ -56,7 +56,7 @@ class Router {
 	 */
 	private function set_default_routes() {
 		$this->routes = [
-			'/TSB_Webhook'        => Second_Page_Handler::class,
+			'/TSB_Webhook'        => TSB_Webhook_Handler::class,
 		];
 
 	}
@@ -78,7 +78,7 @@ class Router {
 	public function boot() {
 		$current_route = $this->get_current_route();
 		if ( in_array( $current_route, $this->get_routes_keys(), true ) ) {
-		    $handler = $this->get_route_handler( $current_route );
+		     $handler = $this->get_route_handler( $current_route );
 			global $wpdb, $wp_roles;
 			$send_error_message = array();
 			$handler_instance   = new $handler();
@@ -96,7 +96,7 @@ class Router {
 	 * @return string Actual url that user requests it.
 	 */
 	private function get_current_route() {
-		$actual_link = ( 'on' === isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] ? 'https' : 'http' )
+		$actual_link = ( 'on' == isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] ? 'https' : 'http' )
 		                . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 		$site_url    = get_site_url();
 		$temp_url    = str_replace( $site_url, '', $actual_link );

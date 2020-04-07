@@ -26,7 +26,7 @@ use Plugin_Name_Dir\Includes\Functions\Utility;
  * @see        \Plugin_Name_Dir\Includes\Functions\Utility
  * @see        \Plugin_Name_Dir\Includes\PageHandlers\Contracts\Page_Handler
  */
-class Second_Page_Handler implements Page_Handler {
+class TSB_Webhook_Handler implements Page_Handler {
 
 	/**
 	 * Method render in First_Page_Handler Class

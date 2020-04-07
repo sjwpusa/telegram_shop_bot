@@ -17,28 +17,39 @@ use Plugin_Name_Dir\Includes\Functions\Utility;
     if(isset($_POST['tsb_settings_submit']) and  isset( $_POST['_wpnonce'] ) and  wp_verify_nonce( $_POST['_wpnonce'], 'save_tsb_settings'))
     {
         $temp=Utility::update_plugin_options($_POST);
-       if($temp['webhook-status'])
-       {
-           ?>
-               <div class="notice notice-success is-dismissible">
-                   <p><strong><?php echo __('settings saved and webhook is set .',PLUGIN_TEXT_DOMAIN);?></strong></p>
-                   <button type="button" class="notice-dismiss">
-                       <span class="screen-reader-text">Dismiss this notice.</span>
-                   </button>
-               </div>
-           <?php
-       }
-       else
-       {
-           ?>
-               <div class="notice notice-success is-dismissible">
-                   <p><strong><?php echo  __('settings saved but webhook not set because '. $temp['webhook-message'],PLUGIN_TEXT_DOMAIN);?></strong></p>
-                   <button type="button" class="notice-dismiss">
-                       <span class="screen-reader-text">Dismiss this notice.</span>
-                   </button>
-               </div>
-           <?php
-       }
+        if (isset($temp['webhook']) and $temp['webhook'])
+        {
+            ?>
+                <div class="notice notice-success is-dismissible">
+                    <p><?php echo  __('Settings Saved And Webhook Set!',PLUGIN_TEXT_DOMAIN);?></p>
+                    <button type="button" class="notice-dismiss">
+                        <span class="screen-reader-text">Dismiss this notice.</span>
+                    </button>
+                </div>
+            <?php
+        }
+        else if (isset($temp['get_updates']) and $temp['get_updates'])
+        {
+            ?>
+            <div class="notice notice-success is-dismissible">
+                <p><?php echo  __('Settings Saved And Get Updates Set!',PLUGIN_TEXT_DOMAIN);?></p>
+                <button type="button" class="notice-dismiss">
+                    <span class="screen-reader-text">Dismiss this notice.</span>
+                </button>
+            </div>
+            <?php
+        }
+        else
+        {
+            ?>
+            <div class="notice notice-success is-dismissible">
+                <p><?php echo  __('Settings Saved But Your <b class="tsb-txt-red">Token Is Invalid</b>!',PLUGIN_TEXT_DOMAIN);?></p>
+                <button type="button" class="notice-dismiss">
+                    <span class="screen-reader-text">Dismiss this notice.</span>
+                </button>
+            </div>
+            <?php
+        }
 
         $TSB_options=get_option('TSB_settings');
     }
@@ -46,20 +57,6 @@ use Plugin_Name_Dir\Includes\Functions\Utility;
     {
         $TSB_options=get_option('TSB_settings');
     }
-//$hook_url     = home_url('TSB_Webhook5e67');
-//try {
-//    // Create Telegram API object
-//    $telegram = new Longman\TelegramBot\Telegram($TSB_options['api_token'], $TSB_options['bot_username']);
-//
-//    // Set webhook
-//    $result = $telegram->setWebhook($hook_url);
-//    if ($result->isOk()) {
-//        wp_die( $result->getDescription());
-//    }
-//} catch (Longman\TelegramBot\Exception\TelegramException $e) {
-//    wp_die('erroe');
-//}
-
 ?>
 <div class="wrap wptp-wrap">
     <h1 class="wp-heading-inline"><?php echo __('Telegram shop Bot',PLUGIN_TEXT_DOMAIN);?></h1>
@@ -82,15 +79,26 @@ use Plugin_Name_Dir\Includes\Functions\Utility;
                     </td>
                     <td>
                         <input type="password" name="api_token" id="api_token" value="<?php echo $TSB_options['api_token']?>" class="regular-text ltr api-token">
-<!--                        <span class="dashicons dashicons-info bot-info-tsb"></span>-->
+                        <div class="description"></div>
                     </td>
                 </tr>
-                  <tr>
+                  <tr class="<?php echo (!empty($TSB_options['bot_username']))? '':'hidden'; ?>">
                     <td>
                         <label for="bot_username"><?php echo  __(' Bot User Name',PLUGIN_TEXT_DOMAIN);?></label>
                     </td>
                     <td>
-                        <input type="text" name="bot_username" id="bot_username" value="<?php echo $TSB_options['bot_username']?>">
+                        <?php
+                        if ($TSB_options['bot_username']!='unauthorized')
+                        {
+                            ?>
+                              <a href="https://t.me/<?php echo $TSB_options['bot_username']; ?>"><?php echo '@'.$TSB_options['bot_username'];?></a>
+                            <?php
+                        }
+                        else
+                        {
+                           echo  __('<b class="tsb-txt-red">Token Is Invalid!</b>',PLUGIN_TEXT_DOMAIN);
+                        }
+                        ?>
                     </td>
                 </tr>
                   <tr>
