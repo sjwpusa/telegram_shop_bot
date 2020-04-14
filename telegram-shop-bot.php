@@ -90,7 +90,7 @@ class TSB {
 
 
 		/*Define required constant for plugin*/
-		Constant::define_constant();
+        Constant::define_constant();
 
 		/**
 		 * Register activation hook.
@@ -154,7 +154,6 @@ class TSB {
 		if ( is_null( ( self::$instance ) ) ) {
 			self::$instance = new self();
 		}
-
 		return self::$instance;
 	}
 

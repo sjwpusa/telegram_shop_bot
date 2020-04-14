@@ -37,7 +37,7 @@ class TSB_Webhook_Handler implements Page_Handler {
 	 */
 	public function render() {
 
-		$sample_variable = 'Mehdi Soltani';
+		$sample_variable = 'Saeed Jamali';
 		Utility::load_template( 'second-page-sample', compact( 'sample_variable' ), 'front' );
 		exit;
 	}

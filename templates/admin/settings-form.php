@@ -57,6 +57,8 @@ use Plugin_Name_Dir\Includes\Functions\Utility;
     {
         $TSB_options=get_option('TSB_settings');
     }
+
+
 ?>
 <div class="wrap wptp-wrap">
     <h1 class="wp-heading-inline"><?php echo __('Telegram shop Bot',PLUGIN_TEXT_DOMAIN);?></h1>
@@ -123,7 +125,7 @@ use Plugin_Name_Dir\Includes\Functions\Utility;
                           <label for="start_command"><?php echo __('Start Command',PLUGIN_TEXT_DOMAIN);?><br>(<?php echo __('Welcome Message',PLUGIN_TEXT_DOMAIN);?>)</label>
                       </td>
                       <td>
-                          <textarea name="start_command" id="start_command" cols="50" class="emoji" rows="4" ><?php echo $TSB_options['start_command'] ;?></textarea>
+                              <textarea name="start_command" id="start_command" cols="50" class="emoji" rows="4" ><?php echo $TSB_options['start_command'] ;?></textarea>
                       </td>
                   </tr>
                 </tbody>

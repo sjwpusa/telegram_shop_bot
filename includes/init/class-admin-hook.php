@@ -87,6 +87,14 @@ class Admin_Hook {
                 $this->version,
                 'all'
             );
+
+            wp_enqueue_style(
+                $this->plugin_name . '_emoji_area',
+                PLUGIN_NAME_ADMIN_CSS . 'emojionearea.min.css',
+                array(),
+                $this->version,
+                'all'
+            );
         }
 	}
 
@@ -113,12 +121,21 @@ class Admin_Hook {
         if (get_current_screen()->base == "toplevel_page_TSB_settings")
         {
             wp_enqueue_script(
+                $this->plugin_name . '_emoji_area',
+                PLUGIN_NAME_ADMIN_JS . 'emojionearea.min.js',
+                array( 'jquery' ),
+                $this->version,
+                true
+            );
+
+            wp_enqueue_script(
                 $this->plugin_name . '_admin_script',
                 PLUGIN_NAME_ADMIN_JS . 'TSB-admin.js',
                 array( 'jquery' ),
                 $this->version,
                 true
             );
+
         }
 
 	}

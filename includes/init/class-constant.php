@@ -50,6 +50,8 @@ class Constant {
 			define( 'PLUGIN_NAME_URL', trailingslashit( plugin_dir_url( dirname( dirname( __FILE__ ) ) ) ) );
 		}
 
+
+
 		/**
 		 * PLUGIN_NAME_CSS constant.
 		 * It is used to specify css urls inside assets directory. It's used in front end and

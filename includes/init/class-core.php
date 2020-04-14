@@ -116,9 +116,9 @@ class Core {
 		$this->loader             = new Loader();
 		$TSB_hooks_loader = new Init_Functions();
 		$this->loader->add_action( 'init', $TSB_hooks_loader, 'app_output_buffer' );
-		/**
-		$this->loader->add_action( 'init', $plugin_name_hooks_loader, 'remove_admin_bar' );
-		 */
+
+//		$this->loader->add_action( 'init', 	$TSB_hooks_loader, 'remove_admin_bar' );
+
 	}
 
 	/**

@@ -15,4 +15,6 @@ jQuery(document).ready(function ($) {
         $('#proxy_' + this.value).show();
     });
 
+    $("#start_command").emojioneArea();
+
 });
